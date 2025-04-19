@@ -1,5 +1,4 @@
 const express = require("express");
-const users = require("./sample.json");
 const cors = require("cors");
 const fs = require("fs");
 
@@ -15,21 +14,28 @@ app.use(
 );
 
 //Display All User
-app.get("/users", (req, res) => {
+app.get("/api/users", (req, res) => {
+  let users = require("./sample.json");
   return res.json(users);
 });
 
 //Delete User Detail
-app.delete("/users/:id", (req, res) => {
+app.delete("/api/users/:id", (req, res) => {
+  let users = require("./sample.json");
   let id = Number(req.params.id);
   let filteredUsers = users.filter((user) => user.id !== id);
-  fs.writeFile("./sample.json", JSON.stringify(filteredUsers), (err, data) => {
-    return res.json(filteredUsers);
-  });
+  fs.writeFile(
+    "./sample.json",
+    JSON.stringify(filteredUsers, null, 2),
+    (err, data) => {
+      return res.json(filteredUsers);
+    }
+  );
 });
 
 //Add New User
-app.post("/users", (req, res) => {
+app.post("/api/users", (req, res) => {
+  let users = require("./sample.json");
   let { name, age, city } = req.body;
   if (!name || !age || !city) {
     res.status(400).send({ message: "All Fields Required" });
@@ -37,24 +43,38 @@ app.post("/users", (req, res) => {
   let id = Date.now();
   users.push({ id, name, age, city });
 
-  fs.writeFile("./sample.json", JSON.stringify(filteredUsers), (err, data) => {
-    return res.json({ message: "User Detail Added Success" });
+  fs.writeFile("./sample.json", JSON.stringify(users, null, 2), (err, data) => {
+    return res.json(users);
   });
 });
 
 //Update User
-app.patch("/users/:id", (req, res) => {
+app.patch("/api/users/:id", (req, res) => {
+  let users = require("./sample.json");
   let id = Number(req.params.id);
   let { name, age, city } = req.body;
   if (!name || !age || !city) {
     res.status(400).send({ message: "All Fields Required" });
   }
 
-  let index = fs.writeFile(
+  let filteredUsers = users.map((item) => {
+    if (item.id === id) {
+      return {
+        id,
+        name,
+        age,
+        city,
+      };
+    } else {
+      return item;
+    }
+  });
+
+  fs.writeFile(
     "./sample.json",
-    JSON.stringify(filteredUsers),
+    JSON.stringify(filteredUsers, null, 2),
     (err, data) => {
-      return res.json({ message: "User Detail Updated Success" });
+      return res.json(filteredUsers);
     }
   );
 });
