@@ -69,9 +69,9 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (userData.id) {
+      if (userData._id) {
         const response = await axios.patch(
-          `http://localhost:8000/api/users/${userData.id}`,
+          `http://localhost:8000/api/users/${userData._id}`,
           userData
         );
         setUsers(response.data);
@@ -126,7 +126,7 @@ function App() {
             {filterusers &&
               filterusers.map((user, index) => {
                 return (
-                  <tr key={user.id}>
+                  <tr key={user._id}>
                     <td>{index + 1}</td>
                     <td>{user.name}</td>
                     <td>{user.age}</td>
@@ -141,7 +141,7 @@ function App() {
                     </td>
                     <td>
                       <button
-                        onClick={() => handleDelete(user.id)}
+                        onClick={() => handleDelete(user._id)}
                         className="btn red"
                       >
                         Delete
@@ -158,7 +158,7 @@ function App() {
               <span className="close" onClick={closeModal}>
                 &times;{" "}
               </span>
-              <h2>{userData.id ? "Update Record" : "Add Record"} </h2>
+              <h2>{userData._id ? "Update Record" : "Add Record"} </h2>
               <div className="input-group">
                 <label htmlFor="name">Full Name</label>
                 <input
@@ -193,7 +193,7 @@ function App() {
               </div>
 
               <button className="btn green" onClick={handleSubmit}>
-                {userData.id ? "Update User" : "Add User"}
+                {userData._id ? "Update User" : "Add User"}
               </button>
             </div>
           </div>
